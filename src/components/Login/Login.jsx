@@ -3,6 +3,8 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Row, Col } from "react-bootstrap";
 
+import { createAPIEndpoint, ENDPOINTS } from "../../api";
+
 import "./Login.scss";
 
 const Login = () => {
@@ -25,13 +27,23 @@ const Login = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const { username, password } = formFields;
+
+    createAPIEndpoint(ENDPOINTS.AUTH)
+      .login(username, password)
+      .then((data) => console.log(data));
+  };
+
   const { username, password } = formFields;
 
   return (
     <div className="Login">
       <Row className="justify-content-md-center pt-5">
         <Col xs="6" lg="4">
-          <Form className="p-5">
+          <Form className="p-5" onSubmit={handleSubmit}>
             <Row className="justify-content-md-center">
               <img
                 src="./assets/images/impressico-logo.png"

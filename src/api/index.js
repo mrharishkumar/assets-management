@@ -4,6 +4,7 @@ const BASE_URL = "http://127.0.0.1:8000/api/";
 
 export const ENDPOINTS = {
   EMPLOYEES: "employees",
+  AUTH: "auth",
 };
 
 export const createAPIEndpoint = (endpoint) => {
@@ -47,7 +48,7 @@ export const createAPIEndpoint = (endpoint) => {
     login: (username, password) =>
       axios({
         method: "post",
-        url: "",
+        url: url,
         data: {
           username: username,
           password: password,
