@@ -11,15 +11,18 @@ const Login = () => {
   const defaultValues = {
     username: "",
     password: "",
+    errorMessage: "",
   };
 
   const [formFields, setFormFields] = useState(defaultValues);
 
   const field = useRef();
 
-  useEffect(() => {
+  const setFocus = () => {
     field.current.focus();
-  }, []);
+  };
+
+  useEffect(() => setFocus, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,16 +37,27 @@ const Login = () => {
 
     createAPIEndpoint(ENDPOINTS.AUTH)
       .login(username, password)
-      .then((data) => console.log(data));
+      .then((data) => {
+        setFormFields({ ...formFields, ...defaultValues });
+        console.log(data);
+      })
+      .catch((error) => {
+        setFocus();
+        setFormFields({
+          ...formFields,
+          password: "",
+          errorMessage: "Check username/password.",
+        });
+      });
   };
 
-  const { username, password } = formFields;
+  const { username, password, errorMessage } = formFields;
 
   return (
     <div className="Login">
       <Row className="justify-content-md-center pt-5">
         <Col xs="6" lg="4">
-          <Form className="p-5" onSubmit={handleSubmit}>
+          <Form className="p-5" onSubmit={handleSubmit} autoComplete="false">
             <Row className="justify-content-md-center">
               <img
                 src="./assets/images/impressico-logo.png"
@@ -72,6 +86,7 @@ const Login = () => {
                 placeholder="Enter password"
               />
             </Form.Group>
+            {errorMessage && <div className="error pt-2">{errorMessage}</div>}
             <Row className="justify-content-md-center">
               <Button className="btn py-1 mt-3" type="submit">
                 Submit
